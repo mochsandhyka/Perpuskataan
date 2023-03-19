@@ -23,6 +23,8 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config['UPLOAD_FOLDER'] = os.getenv("UPLOAD_FOLDER")
 app.config['MAX_CONTENT_LENGHT'] = os.getenv("MAX_CONTENT_LENGHT")
 app.config['ALLOWED_EXTENSIONS'] = os.getenv("ALLOWED_EXTENSION")
+allowedextensions = app.config['ALLOWED_EXTENSIONS']
+uploadfolder = app.config['UPLOAD_FOLDER']
 
 
 #DB
@@ -46,6 +48,8 @@ def generateId():
 #EMAIL REGEX
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 email_regex = re.compile(r"[^@]+@[^@]+\.[^@]")
+
+
 
 
 

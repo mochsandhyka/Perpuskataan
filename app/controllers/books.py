@@ -1,9 +1,14 @@
 from app.models import db
-from app import requestMapping,requestStruct,responseHandler
+from app import requestMapping,requestStruct,responseHandler,allowedextensions,uploadfolder
 from flask import request
 from json_checker import Checker
 from uuid import uuid4
 from flask_jwt_extended import jwt_required,get_jwt_identity
+from werkzeug.utils import secure_filename
+import os
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowedextensions
 
 
 def listBooks():
@@ -41,8 +46,9 @@ def listBooks():
 def createBook():
     currentUser = get_jwt_identity()
     role = currentUser['role']
-    if role == "admin":
-        jsonBody = request.json
+    if role == "Admin":
+        files = request.files.getlist('picture')
+        jsonBody = request.form
         data = requestMapping.Books(jsonBody)
         try:
             result = Checker(requestStruct.Books(),soft=True).validate(data)
@@ -59,13 +65,28 @@ def createBook():
                 }
                 return responseHandler.badRequest(response)
             else:
-                createBook = (f"insert into tbl_book(id_book,stock,book_title,id_book_category,id_book_author,id_book_publisher,picture) values ('{str(uuid4())}','{result['stock']}','{result['bookTitle']}','{result['bookCategory']}','{result['bookAuthor']}','{result['bookPublisher']}','{'a.jpg'}')")
-                db.execute(createBook)
-                response = {
-                    "Data": jsonBody,
-                    "Message": "Data Created"
-                }
-                return responseHandler.ok(response)
+                for i in files:
+                    if i and allowed_file(i.filename):
+                        filename = secure_filename(i.filename)
+                        picfilename = str(uuid4()) + '_' + filename 
+                        i.save(os.path.join(uploadfolder,picfilename))
+                        success = True
+                    if success:
+                        createBook = (f"insert into tbl_book(id_book,stock,book_title,id_book_category,id_book_author,id_book_publisher,picture) values ('{str(uuid4())}','{jsonBody['stock']}','{result['bookTitle']}','{result['bookCategory']}','{result['bookAuthor']}','{result['bookPublisher']}','{picfilename}')")
+                        db.execute(createBook)
+                        response = {
+                            "Data": jsonBody,
+                            "Message": "Data Created"
+                        }
+                        return responseHandler.ok(response)
+                if not files:
+                    createBook = (f"insert into tbl_book(id_book,stock,book_title,id_book_category,id_book_author,id_book_publisher,picture) values ('{str(uuid4())}',{jsonBody['stock']},'{result['bookTitle']}','{result['bookCategory']}','{result['bookAuthor']}','{result['bookPublisher']}','{picfilename}')")
+                    db.execute(createBook)
+                    response={
+                                "Data": createBook,
+                                "Message": "Data Created"
+                            }
+                    return responseHandler.ok(response)
         except Exception as err:
             response = {
                 "Error": str(err)

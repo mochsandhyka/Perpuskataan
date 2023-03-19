@@ -15,7 +15,7 @@ def User():
 
 def Books():
     schema = { 
-        "stock": int,
+        # "stock": int,
         "bookTitle": str,
         "bookCategory": str,
         "bookAuthor": str,

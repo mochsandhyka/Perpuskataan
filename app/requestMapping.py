@@ -14,7 +14,7 @@ def User(jsonBody):
 
 def Books(jsonBody):
     data={
-        "stock": jsonBody['stock'],
+        # "stock": jsonBody['stock'],
         "bookTitle": jsonBody['bookTitle'],
         "bookCategory": jsonBody['bookCategory'],
         "bookAuthor": jsonBody['bookAuthor'],

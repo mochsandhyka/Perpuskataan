@@ -63,13 +63,19 @@ def listBook():
     role = currentUser['role']
     if role == "User":
         try:
-            selectBook = db.select(f"select id_book,book_title,stock from tbl_book where id_book not in(select a.id_book from tbl_detail_borrowed_book as a left join tbl_borrowed_book as b on (a.id_book_borrowed = b.id_book_borrowed) where id_user = '{id}') or id_book in (select a.id_book from tbl_detail_return_book as a left join tbl_return_book as b on (a.id_book_return = b.id_book_return) where id_user = '{id}') and stock > 0")
+            selectBook = db.select(f"select a.id_book,a.book_title,a.stock,b.id_book_author,b.name,c.id_book_publisher,c.name,d.id_book_category,d.category from tbl_book as a left join tbl_book_author as b on(a.id_book_author = b.id_book_author) left join tbl_book_publisher as c on(a.id_book_publisher = c.id_book_publisher) left join tbl_book_category as d on (a.id_book_category = d.id_book_category) where id_book not in(select a.id_book from tbl_detail_borrowed_book as a left join tbl_borrowed_book as b on (a.id_book_borrowed = b.id_book_borrowed) where id_user = '{id}') or id_book in (select a.id_book from tbl_detail_return_book as a left join tbl_return_book as b on (a.id_book_return = b.id_book_return) where id_user = '{id}') and stock > 0")
             data = []
             for i in selectBook:
                 data.append({
                     "idBook": i[0],
                     "bookTitle": i[1],
-                    "stock": i[2]
+                    "stock": i[2],
+                    "idAuthor": i[3],
+                    "author": i[4],
+                    "idPublisher": i[5],
+                    "publisher": i[6],
+                    "idCategory": i[7],
+                    "category": i[8]
                 })
             if data:
                 return responseHandler.ok(data)
