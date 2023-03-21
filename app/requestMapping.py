@@ -12,6 +12,19 @@ def User(jsonBody):
     }
     return data
 
+def userUpdate(jsonBody):
+    data = {
+        "username": jsonBody['username'],
+        "email": jsonBody['email'],
+        "password": jsonBody['password'],
+        "name": jsonBody['name'],
+        "gender": jsonBody['gender'],
+        "address": jsonBody['address'],
+        "city": jsonBody['city'],
+        "phoneNumber": jsonBody['phoneNumber']
+    }
+    return data
+
 def Books(jsonBody):
     data={
         # "stock": jsonBody['stock'],

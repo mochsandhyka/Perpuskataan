@@ -12,7 +12,7 @@ class User(db.Entity):
     city = Required(str)
     phoneNumber = Required(str,column='phone_number')
     dateRegister = Required(date,column='date_register')
-    picture = Optional(str)
+    picture = Optional(str,nullable = True)
     role = Required(str)
     borrowedbook = Set('BorrowedBook')
     returnbook= Set('ReturnBook')

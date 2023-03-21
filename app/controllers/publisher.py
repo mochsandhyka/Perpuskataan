@@ -27,14 +27,13 @@ def listPublisher():
 @jwt_required()
 def createPublisher():
     currentUser = get_jwt_identity()
-    role = currentUser['role']
-    if role == "admin":
-        try:
+    try:
+        if currentUser['role'] == "Admin":
             jsonBody = request.json
             data = requestMapping.Publisher(jsonBody)
             result = Checker(requestStruct.Publisher(),soft=True).validate(data)
-            checkBookPublisher = db.select(f"select * from tbl_book_publisher where name = '{jsonBody['name']}'")
-            if jsonBody['name'] == "" or jsonBody['email'] == "" or jsonBody['address'] == "" or jsonBody['phoneNumber'] == "":
+            checkBookPublisher = db.select(f"select * from tbl_book_publisher where name = '{result['name']}'")
+            if result['name'] == "" or result['email'] == "" or result['address'] == "" or result['phoneNumber'] == "":
                 response = {
                     "Message": "All Data Must be Filled"
                 }
@@ -44,7 +43,7 @@ def createPublisher():
                     "Message": "Publisher Already Registered"
                 }
                 return responseHandler.badRequest(response)
-            elif not checkBookPublisher and email_regex.match(jsonBody['email']):
+            elif not checkBookPublisher and email_regex.match(result['email']):
                 createBookPublisher = (f"insert into tbl_book_publisher(id_book_publisher,name,email,address,phone_number) values('{str(uuid4())}','{result['name']}','{result['email']}','{result['address']}','{result['phoneNumber']}')")
                 db.execute(createBookPublisher)
                 response = {
@@ -52,19 +51,17 @@ def createPublisher():
                     "Message": "Data Created"
                 }
                 return responseHandler.ok(response)
-
-        except Exception as err:
+        else:
+            response = {
+                "Message": "You are Not Allowed Here"
+            }
+            return responseHandler.badRequest(response)
+    except Exception as err:
             response = {
                 "Error": str(err)
             }
             return responseHandler.badGateway(response)
-    else:
-        response = {
-            "Message": "You are Not Allowed Here"
-        }
-        return responseHandler.badRequest(response)
-    
-    
+  
 def readPublisher(id):
     try:
         readById = db.select(f"select id_book_publisher,name,email,address,phone_number from tbl_book_publisher where id_book_publisher = '{id}'")
@@ -94,43 +91,42 @@ def readPublisher(id):
 
 @jwt_required() 
 def updatePublisher(id):
-    currentUser = get_jwt_identity()
-    role = currentUser['role']
-    if role == "admin":
-        try:
+    currentUser = get_jwt_identity() 
+    try:
+        if currentUser['role'] == "Admin":
             jsonBody = request.json
             data = requestMapping.Publisher(jsonBody)
-            updateBookPublisher = (f"update tbl_book_publisher set name='{data['name']}', email='{data['email']}',address='{data['address']}',phone_number='{data['phoneNumber']}' where id_book_publisher = '{id}'")
+            result = Checker(requestStruct.Publisher(),soft=True).validate(data)
+            updateBookPublisher = (f"update tbl_book_publisher set name='{result['name']}', email='{result['email']}',address='{result['address']}',phone_number='{result['phoneNumber']}' where id_book_publisher = '{id}'")
             db.execute(updateBookPublisher)
             response = {
                 "Data": updateBookPublisher,
                 "Message": "Success Update Publisher"
             }
             return responseHandler.ok(response)
-        except Exception as err:
+        else:
+            response = {
+                "Message": "You are Not Allowed Here"
+            }
+            return responseHandler.badRequest(response)
+    except Exception as err:
             response = {
                 "Error": str(err)
             }
-            return responseHandler.badGateway(response)
-    else:
-        response = {
-            "Message": "You are Not Allowed Here"
-        }
-        return responseHandler.badRequest(response)
+            return responseHandler.badGateway(response)  
+    
 
 @jwt_required()
 def deletePublisher(id):
-    currentUser = get_jwt_identity()
-    role = currentUser['role']
-    if role == "admin":
-        try:
+    currentUser = get_jwt_identity() 
+    try:
+        if currentUser['role'] == "Admin":    
             selectById = (f"select id_book_publisher from tbl_book_publisher where id_book_publisher = '{id}'")
             data=[]
             for i in db.execute(selectById):
-                dictData = {
+                data.append({
                     "idBookPublisher": i[0]
-                }
-                data.append(dictData)
+                })
             if not data:
                 response = {
                     "Message": "Data Not Found"
@@ -148,13 +144,14 @@ def deletePublisher(id):
                     "Message": "Delete Invalid"
                 } 
                 return responseHandler.badRequest(response)
-        except Exception as err:
+        else:
+            response = {
+                "Message": "You are Not Allowed Here"
+            }
+            return responseHandler.badRequest(response)
+    except Exception as err:
             response={
                 "Error": str(err)
             }
-            return responseHandler.badGateway(response)
-    else:
-        response = {
-            "Message": "You are Not Allowed Here"
-        }
-        return responseHandler.badRequest(response)
+            return responseHandler.badGateway(response)  
+    

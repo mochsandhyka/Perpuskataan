@@ -12,6 +12,19 @@ def User():
     }
     return schema
 
+def userUpdate():
+    schema = {
+        "username": str,
+        "email": str,
+        "password": str,
+        "name": str,
+        "gender": str,
+        "address": str,
+        "city": str,
+        "phoneNumber": str
+    }
+    return schema
+
 
 def Books():
     schema = { 

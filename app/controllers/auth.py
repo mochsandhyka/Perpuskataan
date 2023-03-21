@@ -2,7 +2,7 @@ from app.models import db
 from app import responseHandler
 from flask import request,jsonify
 import hashlib,os
-from flask_jwt_extended import create_access_token,get_jwt_identity,unset_access_cookies,jwt_required
+from flask_jwt_extended import create_refresh_token,create_access_token,get_jwt_identity,unset_access_cookies,jwt_required
 
 
 def login():
@@ -16,10 +16,12 @@ def login():
                 "role": i[1]
             }
         if user:
-            access_token = create_access_token(identity=userAuth,fresh=True) 
+            accessToken = create_access_token(identity=userAuth,fresh=True)
+            refreshToken = create_refresh_token(identity=user)
             response = {
                 "Data": userAuth,
-                "Token": access_token,
+                "accessToken": accessToken,
+                "refreshToken": refreshToken,
                 "Message": "Login Success"}
             #set_access_cookies(jsonify(response), access_token)
             return responseHandler.ok(response)

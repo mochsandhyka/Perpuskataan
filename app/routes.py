@@ -1,5 +1,5 @@
 from app import app
-from app.controllers import auth,user,books,authors,publisher,category,transaction
+from app.controllers import auth,user,books,authors,publisher,category,transaction,token
 
 #AUTHOR
 app.route('/list/authors',methods = ['GET'])(authors.listAuthors)
@@ -36,7 +36,7 @@ app.route('/delete/book/<id>',methods = ['DELETE'])(books.deleteBook)
 app.route('/list/users',methods = ['GET'])(user.listUsers)
 app.route('/create/user',methods = ['POST'])(user.createUser)
 app.route('/read/user/<id>',methods = ['GET'])(user.readUser)
-app.route('/update/user/<id>',methods = ['PATCH'])(user.updateUser)
+app.route('/update/user',methods = ['PATCH'])(user.updateUser)
 app.route('/delete/user/<id>',methods = ['DELETE'])(user.deleteUser)
 
 
@@ -44,6 +44,8 @@ app.route('/delete/user/<id>',methods = ['DELETE'])(user.deleteUser)
 app.route('/auth/login',methods = ['POST'])(auth.login)
 app.route('/auth/logout',methods = ['DELETE'])(auth.logout)
 
+#TOKEN
+app.route('/refresh',methods = ['POST'])(token.refresh)
 
 #TRANSACTION
 #BORROW

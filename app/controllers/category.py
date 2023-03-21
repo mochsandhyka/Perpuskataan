@@ -20,17 +20,17 @@ def listCategory():
             "Message": str(err)
         }
         return responseHandler.badGateway(response)
+    
 @jwt_required()
 def createCategory():
     currentUser = get_jwt_identity()
-    role = currentUser['role']
-    if role == "admin":
-        jsonBody = request.json
-        data = requestMapping.Category(jsonBody)
-        try:
+    try:
+        if currentUser['role'] == "Admin":
+            jsonBody = request.json
+            data = requestMapping.Category(jsonBody)
             result = Checker(requestStruct.Category(),soft=True).validate(data)
-            checkBookCategory = db.select(f"select *from tbl_book_category where category = '{jsonBody['category']}'")
-            if jsonBody['category'] == "":
+            checkBookCategory = db.select(f"select *from tbl_book_category where category = '{result['category']}'")
+            if result['category'] == "":
                 response = {
                     "Message" : "All Data Must be Filled"
                 }
@@ -48,16 +48,17 @@ def createCategory():
                     "Message": "Data Created"
                 }
                 return responseHandler.ok(response)
-        except Exception as err:
+        else:
+            response = {
+                "Message": "You are Not Allowed Here"
+            }
+            return responseHandler.badRequest(response)
+    except Exception as err:
             response ={
                 "Error": str(err)
             }
-            return responseHandler.badGateway(response)
-    else:
-        response = {
-            "Message": "You are Not Allowed Here"
-        }
-        return responseHandler.badRequest(response)
+            return responseHandler.badGateway(response)    
+    
     
 def readCategory(id):
     try:
@@ -86,42 +87,41 @@ def readCategory(id):
 @jwt_required()
 def updateCategory(id):
     currentUser = get_jwt_identity()
-    role = currentUser['role']
-    if role == "admin":
-        try:
+    try:
+        if currentUser['role'] == "Admin":
             jsonBody = request.json
             data = requestMapping.Category(jsonBody)
-            updateBookCategory = (f"update tbl_book_category set category='{data['category']}' where id_book_category = '{id}'")
+            result = Checker(requestStruct.userUpdate(),soft=True).validate(data)
+            updateBookCategory = (f"update tbl_book_category set category='{result['category']}' where id_book_category = '{id}'")
             db.execute(updateBookCategory)
             response = {
                 "Data": updateCategory,
                 "Message": "Success Update Publisher"
             }
             return responseHandler.ok(response)
-        except Exception as err:
+        else:
+            response = {
+                "Message": "You are Not Allowed Here"
+            }
+            return responseHandler.badRequest(response)
+    except Exception as err:
             response = {
                 "Error": str(err)
             }
-            return responseHandler.badGateway(response)
-    else:
-        response = {
-            "Message": "You are Not Allowed Here"
-        }
-        return responseHandler.badRequest(response)
+            return responseHandler.badGateway(response)   
+    
     
 @jwt_required()
 def deleteCategory(id):
     currentUser = get_jwt_identity()
-    role = currentUser['role']
-    if role == "admin":
-        try:
+    try:
+        if currentUser['role'] == "Admin":
             selectById = (f"select id_book_category from tbl_book_category where id_book_category = '{id}'")
             data = []
             for i in db.execute(selectById):
-                dictData = {
+                data.append({
                     "idBookCategory": i[0]
-                }
-                data.append(dictData)
+                })
             if not data:
                 response = {
                     "Message": "Data Not Found"
@@ -138,14 +138,13 @@ def deleteCategory(id):
                 "Message": "Delete Invalid"
             }
             return responseHandler.badRequest(response)
-        except Exception as err:
+        else:
+            response = {
+                "Message": "You are Not Allowed Here"
+            }
+            return responseHandler.badRequest(response)    
+    except Exception as err:
             response = {
                 "Error": str(err)
             }
             return responseHandler.badGateway(response)
-    else:
-        response = {
-            "Message": "You are Not Allowed Here"
-        }
-        return responseHandler.badRequest(response)
-    
