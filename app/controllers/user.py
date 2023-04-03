@@ -36,11 +36,11 @@ def listUsers():
         }
         return responseHandler.badGateway(response)
     
-@jwt_required(fresh=True)
+# @jwt_required(fresh=True)
 def createUser():
-    currentUser = get_jwt_identity()
+    # currentUser = get_jwt_identity()
     try:
-        if currentUser['role'] == "Admin":    
+        # if currentUser['role'] == "Admin":    
             jsonBody = request.json
             data = requestMapping.User(jsonBody)
             result = Checker(requestStruct.User(),soft=True).validate(data)
@@ -66,11 +66,11 @@ def createUser():
                     "Message": "Data Created"
                 }
                 return responseHandler.ok(response)
-        else:
-            response = {
-                "Message": "You are Not Allowed Here"
-            }
-            return responseHandler.badRequest(response)
+        # else:
+        #     response = {
+        #         "Message": "You are Not Allowed Here"
+        #     }
+        #     return responseHandler.badRequest(response)
     except Exception as err:
             response ={
                 "Error": str(err)

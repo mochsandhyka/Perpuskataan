@@ -10,4 +10,4 @@ db_params = {'provider': os.getenv('DB_PROVIDER'),
 
 
 db.bind(**db_params)
-db.generate_mapping(create_tables=False)
+db.generate_mapping(create_tables=True)

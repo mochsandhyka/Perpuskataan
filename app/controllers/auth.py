@@ -35,25 +35,29 @@ def login():
             "Error": str(err)
         }
         return responseHandler.badGateway(response)
-    
-@jwt_required()
+
 def logout():
-    try:
-        currentUser = get_jwt_identity()
-        if currentUser:
-            response = {
-                "Message": "Logout Successfull"
-            }
-            unset_access_cookies(jsonify(response))
-            return responseHandler.ok(response)
-        else:
-            response = {
-                "Message": "Logout Unccessfull"
-            }
-            return responseHandler.badRequest(response)
-    except Exception as err:
-        response = {
-                "Error": str(err)
-            }
-        return responseHandler.badGateway(response)
+    a = request.form('content')
+    print (jsonify(a))
+    return "w"
+# @jwt_required()
+# def logout():
+#     try:
+#         currentUser = get_jwt_identity()
+#         if currentUser:
+#             response = {
+#                 "Message": "Logout Successfull"
+#             }
+#             unset_access_cookies(jsonify(response))
+#             return responseHandler.ok(response)
+#         else:
+#             response = {
+#                 "Message": "Logout Unccessfull"
+#             }
+#             return responseHandler.badRequest(response)
+#     except Exception as err:
+#         response = {
+#                 "Error": str(err)
+#             }
+#         return responseHandler.badGateway(response)
     

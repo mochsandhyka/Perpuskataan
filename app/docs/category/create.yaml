@@ -1,0 +1,18 @@
+Redirects to a Real URL
+
+
+---
+
+
+tags:
+  - Category
+parameters:
+  - name: category
+    required: true
+
+
+responses:
+  302:
+  description: Redirects to where
+  400:
+  description: Record Not Found

@@ -1,5 +1,5 @@
 from app import app
-from app.controllers import auth,user,books,authors,publisher,category,transaction,token
+from app.controllers import auth,user,books,authors,publisher,category,transaction,token,sendMail
 
 #AUTHOR
 app.route('/list/authors',methods = ['GET'])(authors.listAuthors)
@@ -46,6 +46,10 @@ app.route('/auth/logout',methods = ['DELETE'])(auth.logout)
 
 #TOKEN
 app.route('/refresh',methods = ['POST'])(token.refresh)
+
+#SENDMAIL
+app.route('/send',methods=['GET'])(sendMail.sendMail)
+app.route('/verif',methods = ['GET'])(sendMail.after)
 
 #TRANSACTION
 #BORROW

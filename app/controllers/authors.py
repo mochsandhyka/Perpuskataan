@@ -5,6 +5,7 @@ from json_checker import Checker
 from uuid import uuid4
 from flask_jwt_extended import jwt_required,get_jwt_identity
 
+
 def listAuthors():
     try:
         # listBookAuthor = db.select(f"select a.id_book_author,a.name,a.email,a.gender,a.address,a.phone_number,b.id_book,b.stock,b.book_title,b.picture from tbl_book_author as a left join tbl_book as b on(a.id_book_author = b.id_book_author)")
@@ -102,7 +103,7 @@ def readAuthor(id):
         }
         return responseHandler.badGateway(response)
     
-@jwt_required()
+@jwt_required() 
 def updateAuthor(id):
     currentUser = get_jwt_identity()
     try:

@@ -1,10 +1,11 @@
 from app.models import db
-from app import requestMapping,requestStruct,responseHandler
+from app import swag_from,requestMapping,requestStruct,responseHandler
 from flask import request
 from json_checker import Checker
 from uuid import uuid4
 from flask_jwt_extended import get_jwt_identity,jwt_required
 
+@swag_from('../docs/category/category.yaml')
 def listCategory():
     try:
         listCategory = db.select(f"select id_book_category, category from tbl_book_category")
@@ -24,6 +25,7 @@ def listCategory():
 @jwt_required()
 def createCategory():
     currentUser = get_jwt_identity()
+    
     try:
         if currentUser['role'] == "Admin":
             jsonBody = request.json
