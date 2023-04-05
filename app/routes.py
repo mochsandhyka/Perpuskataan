@@ -1,48 +1,54 @@
 from app import app
-from app.controllers import auth,user,books,authors,publisher,category,transaction,token,sendMail
+from app.controllers.publisher import listPublisher,createPublisher,readPublisher,updatePublisher,deletePublisher
+from app.controllers.user import listUser,createUser,readUser,updateUser,deleteUser
+from app.controllers.author import listAuthor,createAuthor,readAuthor,updateAuthor,deleteAuthor
+from app.controllers.category import listCategory,createCategory,readCategory,updateCategory,deleteCategory
+from app.controllers.book import listBook,createBook,readBook,updateBook,deleteBook
+from app.controllers import auth,transaction,token,sendMail
+
 
 #AUTHOR
-app.route('/list/authors',methods = ['GET'])(authors.listAuthors)
-app.route('/create/author',methods = ['POST'])(authors.createAuthor)
-app.route('/read/author/<id>',methods = ['GET'])(authors.readAuthor)
-app.route('/update/author/<id>',methods = ['PATCH'])(authors.updateAuthor)
-app.route('/delete/author/<id>',methods = ['DELETE'])(authors.deleteAuthor)
+app.route('/authors/list',methods = ['GET'])(listAuthor.listAuthors)
+app.route('/author/create',methods = ['POST'])(createAuthor.createAuthor)
+app.route('/author/read/<id>',methods = ['GET'])(readAuthor.readAuthor)
+app.route('/author/update/<id>',methods = ['PATCH'])(updateAuthor.updateAuthor)
+app.route('/author/delete/<id>',methods = ['DELETE'])(deleteAuthor.deleteAuthor)
 
 
 #PUBLISHER
-app.route('/list/publishers',methods = ['GET'])(publisher.listPublisher)
-app.route('/create/publisher',methods = ['POST'])(publisher.createPublisher)
-app.route('/read/publisher/<id>',methods = ['GET'])(publisher.readPublisher)
-app.route('/update/publisher/<id>',methods = ['PATCH'])(publisher.updatePublisher)
-app.route('/delete/publisher/<id>',methods = ['DELETE'])(publisher.deletePublisher)
+app.route('/publishers/list',methods = ['GET'])(listPublisher.listPublisher)
+app.route('/publisher/create',methods = ['POST'])(createPublisher.createPublisher)
+app.route('/publisher/read/<id>',methods = ['GET'])(readPublisher.readPublisher)
+app.route('/publisher/update/<id>',methods = ['PATCH'])(updatePublisher.updatePublisher)
+app.route('/publisher/delete/<id>',methods = ['DELETE'])(deletePublisher.deletePublisher)
 
 
 #CATEGORY
-app.route('/list/categories',methods = ['GET'])(category.listCategory)
-app.route('/create/category',methods = ['POST'])(category.createCategory)
-app.route('/read/category/<id>',methods = ['GET'])(category.readCategory)
-app.route('/update/category/<id>',methods = ['PATCH'])(category.updateCategory)
-app.route('/delete/category/<id>',methods = ['DELETE'])(category.deleteCategory)
+app.route('/categories/list',methods = ['GET'])(listCategory.listCategory)
+app.route('/category/create',methods = ['POST'])(createCategory.createCategory)
+app.route('/category/read/<id>',methods = ['GET'])(readCategory.readCategory)
+app.route('/category/update/<id>',methods = ['PATCH'])(updateCategory.updateCategory)
+app.route('/category/delete/<id>',methods = ['DELETE'])(deleteCategory.deleteCategory)
 
 
 #BOOK
-app.route('/list/books',methods = ['GET'])(books.listBooks)
-app.route('/create/book',methods = ['POST'])(books.createBook)
-app.route('/read/book/<id>',methods = ['GET'])(books.readBook)
-app.route('/update/book/<id>',methods = ['PATCH'])(books.updateBook)
-app.route('/delete/book/<id>',methods = ['DELETE'])(books.deleteBook)
+app.route('/books/list',methods = ['GET'])(listBook.listBooks)
+app.route('/book/create',methods = ['POST'])(createBook.createBook)
+app.route('/book/read',methods = ['GET'])(createBook.read)
+app.route('/book/read/<id>',methods = ['GET'])(readBook.readBook)
+app.route('/book/update/<id>',methods = ['PATCH'])(updateBook.updateBook)
+app.route('/book/delete/<id>',methods = ['DELETE'])(deleteBook.deleteBook)
 
 #USER
-app.route('/list/users',methods = ['GET'])(user.listUsers)
-app.route('/create/user',methods = ['POST'])(user.createUser)
-app.route('/read/user/<id>',methods = ['GET'])(user.readUser)
-app.route('/update/user',methods = ['PATCH'])(user.updateUser)
-app.route('/delete/user/<id>',methods = ['DELETE'])(user.deleteUser)
+app.route('/users/list',methods = ['GET'])(listUser.listUsers)
+app.route('/user/create',methods = ['POST'])(createUser.createUser)
+app.route('/user/read/<id>',methods = ['GET'])(readUser.readUser)
+app.route('/user/update/<id>',methods = ['PATCH'])(updateUser.updateUser)
+app.route('/user/delete/<id>',methods = ['DELETE'])(deleteUser.deleteUser)
 
 
 #AUTH
 app.route('/auth/login',methods = ['POST'])(auth.login)
-app.route('/auth/logout',methods = ['DELETE'])(auth.logout)
 
 #TOKEN
 app.route('/refresh',methods = ['POST'])(token.refresh)

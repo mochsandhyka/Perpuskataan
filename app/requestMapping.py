@@ -1,3 +1,12 @@
+def createUser(jsonBody):
+    data = {
+        "username": jsonBody['username'],
+        "email": jsonBody['email'],
+        "password": jsonBody['password'],
+        "role": jsonBody['role']
+    }
+    return data
+
 def User(jsonBody):
     data = {
         "username": jsonBody['username'],

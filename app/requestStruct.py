@@ -1,3 +1,12 @@
+def createUser():
+    schema = {
+        "username": str,
+        "email": str,
+        "password": str,
+        "role": str
+    }
+    return schema
+
 def User():
     schema = {
         "username": str,
